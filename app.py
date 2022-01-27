@@ -1,0 +1,78 @@
+from starlette.applications import Starlette
+from starlette.templating import Jinja2Templates
+from starlette.routing import Route
+from starlette.requests import Request
+from starlette.middleware import Middleware
+from starlette.middleware.base import BaseHTTPMiddleware
+from httpx import TimeoutException
+
+from html_parser import parse_forum, parse_forums, parse_thread
+
+templates = Jinja2Templates("./templates")
+
+
+class CustomErrorMiddleware(BaseHTTPMiddleware):
+    """全局错误处理"""
+
+    @staticmethod
+    def error_response(request, exception):
+        """错误页面模板渲染"""
+        return templates.TemplateResponse(
+            "error.html", {"request": request, "exception": exception}
+        )
+
+    async def dispatch(self, request: Request, call_next):
+        try:
+            return await call_next(request)
+        except TimeoutException:
+            return self.error_response(request, "请求超时了")
+        except AssertionError:
+            return self.error_response(request, "HTML 解析出错了")
+        except Exception as e:
+            return self.error_response(request, str(e))
+
+
+async def get_thread(request: Request):
+    """获取并渲染，返回单个帖子内容"""
+    thread_id = request.path_params.get("thread_id", 1)
+    page = request.query_params.get("page", 1)
+    page = int(page)
+    result = await parse_thread(thread_id, page)
+    return templates.TemplateResponse(
+        "thread.html",
+        {
+            "request": request,
+            "result": result,
+            "curr_page": page,
+            "next_page": page + 1,
+            "previous_page": page - 1,
+        },
+    )
+
+
+async def get_forum(request: Request):
+    """获取并渲染，返回单个版块内容"""
+    forum_id = request.path_params.get("forum_id", 1)
+    page = request.query_params.get("page", 1)
+    page = int(page)
+    result = await parse_forum(forum_id, page)
+    return templates.TemplateResponse(
+        "forum.html", {"request": request, "result": result, "curr_page": page}
+    )
+
+
+async def get_forums(request: Request):
+    """获取并渲染，返回主页内容"""
+    result = await parse_forums()
+    return templates.TemplateResponse(
+        "forums.html", {"request": request, "forums": result}
+    )
+
+
+routes = [
+    Route("/thread/{thread_id:int}", get_thread),
+    Route("/forum/{forum_id:int}", get_forum),
+    Route("/forums", get_forums),
+]
+middlewares = [Middleware(CustomErrorMiddleware)]
+app = Starlette(routes=routes, middleware=middlewares)

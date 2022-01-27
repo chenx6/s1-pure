@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ result.title }}</title>
+  <link href="https://unpkg.com/@primer/css@^16.0.0/dist/primer.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="container-lg clearfix">
+    {# Title #}
+    <nav aria-label="Breadcrumb" class="p-2">
+      <ol class="Truncate overflow-hidden">
+        <li class="breadcrumb-item Truncate-text">
+          <a href="/forum/{{ result.forum_id }}">{{ result.forum_name }}</a>
+        </li>
+        <li class="breadcrumb-item breadcrumb-item-selected Truncate-text--primary" aria-current="page">
+          <a aria-disabled="true">{{ result.title }}</a>
+        </li>
+      </ol>
+    </nav>
+    {# Reply #}
+    {% for post in result.posts %}
+    <div class="Box Box--condensed">
+      {# Reply user info #}
+      <div class="Box-header">
+        <div class="d-inline">
+          <div class="d-inline-block">
+            <img class="avatar avatar-6" alt="{{ post.user }}" src="{{ post.avatar }}" />
+          </div>
+          <div class="d-inline-block">
+            {{ post.user }}
+          </div>
+          <div class="d-inline-block">
+            {{ post.time }}
+          </div>
+        </div>
+      </div>
+      {# Reply content #}
+      <div class="p-2">
+        {{ post.content|safe }}
+      </div>
+    </div>
+    {# Timeline #}
+    <div class="TimelineItem TimelineItem--condensed">
+    </div>
+    {% endfor %}
+    {# Paginate #}
+    <nav class="paginate-container" aria-label="Pagination">
+      <div class="pagination">
+        {# Previous page #}
+        {% if curr_page==1 %}
+        <a class="previous_page" aria-disabled="true">上一页</a>
+        {% else %}
+        <a class="previous_page" href="?page={{ previous_page }}">上一页</a>
+        <a href="?page=1" aria-label="Page 1">1</a>
+        <span class="gap">…</span>
+        {% endif %}
+        {# Current page #}
+        <em aria-current="page">{{ curr_page }}</em>
+        {% if curr_page != result.total_page %}
+        <a href="?page={{ next_page }}" aria-label="Page {{ next_page }}">{{ next_page }}</a>
+          {% if curr_page + 1 != result.total_page %}
+          <span class="gap">…</span>
+          <a href="?page={{ result.total_page }}" aria-label="Page {{ result.total_page }}">{{ result.total_page }}</a>
+          {% endif %}
+        {% endif %}
+        {# Next page #}
+        {% if curr_page==result.total_page %}
+        <a class="next_page" aria-disabled="true">
+        {% else %}
+        <a class="next_page" rel="next" href="?page={{ next_page }}" aria-label="Next Page">
+        {% endif %}
+          下一页
+        </a>
+        
+      </div>
+    </nav>
+  </div>
+</body>
+
+</html>

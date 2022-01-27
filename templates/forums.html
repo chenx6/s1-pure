@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stage1st</title>
+  <link href="https://unpkg.com/@primer/css@^16.0.0/dist/primer.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="container-lg clearfix">
+    <img src="https://static.saraba1st.com/image/s1/logo.png">
+    <div class="Box">
+      <ul>
+        {% for forum in forums %}
+        <li class="Box-row">
+          <a href="/forum/{{ forum.forum_id }}">{{ forum.title }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+</body>
+
+</html>

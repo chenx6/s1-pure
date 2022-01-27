@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ result.title }}</title>
+  <link href="https://unpkg.com/@primer/css@^16.0.0/dist/primer.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="container-lg clearfix">
+    {# Title #}
+    <nav aria-label="Breadcrumb" class="p-2">
+      <ol class="Truncate overflow-hidden">
+        <li class="breadcrumb-item Truncate-text">
+          <a href="">{{ result.title }}</a>
+        </li>
+      </ol>
+    </nav>
+    {# Threads #}
+    <div class="Box">
+      <ul>
+        {% for thread in result.threads %}
+        <li class="Box-row">
+          <a href="/thread/{{ thread.thread_id }}">{{ thread.title }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {# Paginate #}
+    <nav class="paginate-container" aria-label="Pagination">
+      <div class="pagination">
+        {% if curr_page==1 %}
+        <a class="previous_page" aria-disabled="true">上一页</a>
+        {% else %}
+        <a class="previous_page" href="?page={{ curr_page - 1 }}">上一页</a>
+        {% endif %}
+        {% if curr_page == result.total_page %}
+        <a class="next_page" aria-disabled="true">下一页</a>
+        {% else %}
+        <a class="next_page" href="?page={{ curr_page + 1 }}" aria-label="Page {{ curr_page + 1 }}">下一页</a>
+        {% endif %}
+      </div>
+    </nav>
+  </div>
+
+</body>
+
+</html>
