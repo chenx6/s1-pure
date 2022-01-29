@@ -37,7 +37,7 @@ class CustomErrorMiddleware(BaseHTTPMiddleware):
 
 async def is_cached(request: Request, or_do: Callable, ttl: int = 60):
     """查看请求页面是否被缓存，如果没有缓存就调取抓取数据函数再缓存"""
-    url = str(request.base_url)
+    url = str(request.url)
     result = cache.get(url)
     if not result:
         result = await or_do()
