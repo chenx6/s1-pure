@@ -18,10 +18,10 @@ class CustomErrorMiddleware(BaseHTTPMiddleware):
     """全局错误处理"""
 
     @staticmethod
-    def error_response(request, exception):
+    def error_response(request, exception, status_code: int = 400):
         """错误页面模板渲染"""
         return templates.TemplateResponse(
-            "error.html", {"request": request, "exception": exception}
+            "error.html", {"request": request, "exception": exception}, status_code
         )
 
     async def dispatch(self, request: Request, call_next):
