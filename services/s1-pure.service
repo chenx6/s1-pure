@@ -3,6 +3,7 @@ Name=s1-pure
 Description=Stage1st client for cleaner view
 
 [Service]
+Type=simple
 # Modify the path below
 WorkingDirectory=/home/chenx/s1-pure
 ExecStart=/home/chenx/s1-pure/services/start.sh
