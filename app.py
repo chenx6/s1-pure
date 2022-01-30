@@ -56,6 +56,7 @@ async def get_thread(request: Request):
         {
             "request": request,
             "result": result,
+            "origin_url": f"https://bbs.saraba1st.com/2b/thread-{thread_id}-{page}-1.html",
             "curr_page": page,
             "next_page": page + 1,
             "previous_page": page - 1,
@@ -70,7 +71,13 @@ async def get_forum(request: Request):
     page = int(page)
     result = await is_cached(request, lambda: parse_forum(forum_id, page))
     return templates.TemplateResponse(
-        "forum.html", {"request": request, "result": result, "curr_page": page}
+        "forum.html",
+        {
+            "request": request,
+            "result": result,
+            "origin_page": f"https://bbs.saraba1st.com/2b/forum-{forum_id}-{page}.html",
+            "curr_page": page,
+        },
     )
 
 
@@ -78,7 +85,12 @@ async def get_forums(request: Request):
     """获取并渲染，返回主页内容"""
     result = await is_cached(request, lambda: parse_forums())
     return templates.TemplateResponse(
-        "forums.html", {"request": request, "forums": result}
+        "forums.html",
+        {
+            "request": request,
+            "forums": result,
+            "origin_page": "https://bbs.saraba1st.com/2b/forum.php",
+        },
     )
 
 
