@@ -3,3 +3,4 @@ httpx
 bs4
 uvicorn[standard]
 cacheout
+jinja2
