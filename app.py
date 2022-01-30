@@ -75,7 +75,7 @@ async def get_forum(request: Request):
         {
             "request": request,
             "result": result,
-            "origin_page": f"https://bbs.saraba1st.com/2b/forum-{forum_id}-{page}.html",
+            "origin_url": f"https://bbs.saraba1st.com/2b/forum-{forum_id}-{page}.html",
             "curr_page": page,
         },
     )
@@ -89,7 +89,7 @@ async def get_forums(request: Request):
         {
             "request": request,
             "forums": result,
-            "origin_page": "https://bbs.saraba1st.com/2b/forum.php",
+            "origin_url": "https://bbs.saraba1st.com/2b/forum.php",
         },
     )
 
