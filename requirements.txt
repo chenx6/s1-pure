@@ -1,5 +1,5 @@
 starlette
 httpx
 bs4
-starlette
+uvicorn[standard]
 cacheout
